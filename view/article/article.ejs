@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/node_modules/mditor/dist/css/mditor.min.css">
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/node_modules//mditor/dist/js/mditor.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">银狐博客</a>
+        </div>
+        <% if(!isLogin){ %>
+        <!--登录注册按钮-->
+        <div class="navbar-form navbar-right">
+            <a href="/login"  class="btn btn-primary ">登录</a>
+            <a href="/register"  class="btn btn-success  ">注册</a>
+        </div>
+        <% }else{ %>
+        <!--用户信息,注销按钮-->
+        <div class="navbar-form navbar-right">
+            <a href="javascript:;" class="btn btn-warning ">欢迎 <strong><%=user.nickname %></strong></a>
+            <a href="/loginOut"  class="btn btn-danger ">注销</a>
+        </div>
+        <!--发表文章-->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">发起 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/article/add">文章</a></li>
+                        <li><a href="javascript:;">问题</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+        <% } %>
+    </div><!-- /.container-fluid -->
+</nav>
+
+<h1>发表文章页</h1>
+<hr>
+<form id="form">
+        <input type="hidden" value="<%=user.id%>" name="authorId">
+    <div class="form-group">
+        <label>文章标题:  </label>
+            <input type="text" class="form-control" name="title" required>
+    </div>
+    <div class="form-group">
+        <label>文章内容:  </label>
+        <textarea name="content" id="editor"></textarea>
+    </div>
+    <div class="form-group text-center">
+        <input type="submit" value="提交" class="btn btn-primary">
+    </div>
+</form>
+
+
+<script>
+    $(function(){
+        var mditor =  Mditor.fromTextarea(document.getElementById('editor'));
+        //获取或设置编辑器的值
+    //     mditor.on('ready',function(){
+    //     console.log(mditor.value);
+    //     mditor.value = '** hello **';	
+    //   });
+
+
+    // 发表文章
+    $("#form").on("submit",function(e){
+        e.preventDefault();
+        $.ajax({
+            url:"http://127.0.0.1:5002/article/add",
+            type:"post",
+            data:$("#form").serialize(),
+            dataType:"json",
+            success:function(res){
+                console.log(res);
+                if(res.status!=200) return alert("发表文章失败");
+                location.href = "/article/info";
+            }
+        })
+    })
+    })
+
+</script>
+</body>
+</html>
