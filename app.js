@@ -35,6 +35,8 @@ app.use(session({
      })
  })
 
+const router1 = require("./router/article.js");
+app.use(router1);
 
 
 app.listen(5002,()=>{

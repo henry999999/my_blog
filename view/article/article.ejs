@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/node_modules/mditor/dist/css/mditor.min.css">
     <script src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/node_modules//mditor/dist/js/mditor.min.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -48,7 +50,51 @@
     </div><!-- /.container-fluid -->
 </nav>
 
-<h1>这是文章添加页面</h1>
+<h1>发表文章页</h1>
+<hr>
+<form id="form">
+        <input type="hidden" value="<%=user.id%>" name="authorId">
+    <div class="form-group">
+        <label>文章标题:  </label>
+            <input type="text" class="form-control" name="title" required>
+    </div>
+    <div class="form-group">
+        <label>文章内容:  </label>
+        <textarea name="content" id="editor"></textarea>
+    </div>
+    <div class="form-group text-center">
+        <input type="submit" value="提交" class="btn btn-primary">
+    </div>
+</form>
 
+
+<script>
+    $(function(){
+        var mditor =  Mditor.fromTextarea(document.getElementById('editor'));
+        //获取或设置编辑器的值
+    //     mditor.on('ready',function(){
+    //     console.log(mditor.value);
+    //     mditor.value = '** hello **';	
+    //   });
+
+
+    // 发表文章
+    $("#form").on("submit",function(e){
+        e.preventDefault();
+        $.ajax({
+            url:"http://127.0.0.1:5002/article/add",
+            type:"post",
+            data:$("#form").serialize(),
+            dataType:"json",
+            success:function(res){
+                console.log(res);
+                if(res.status!=200) return alert("发表文章失败");
+                location.href = "/article/info";
+            }
+        })
+    })
+    })
+
+</script>
 </body>
 </html>

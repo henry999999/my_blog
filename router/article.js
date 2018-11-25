@@ -3,8 +3,9 @@
  */
 const express = require("express");
 const router = express.Router();
-const controller = require("../controller/article.js");
+const controller = require("../controller/as.js");
 router.get("/article/add",controller.handleArticleAdd);
+router.post("/article/add",controller.handlePostArticleAdd);
 
 
 
